@@ -1,5 +1,5 @@
-const { MongoClient, ServerApiVersion } = require("mongodb");
 const express = require("express");
+const { MongoClient, ServerApiVersion } = require("mongodb");
 const app = express();
 const cors = require("cors");
 const port = process.env.PORT || 5005;
@@ -41,6 +41,13 @@ async function run() {
       res.json(result);
     });
 
+    app.get("/postDetail/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await postCollection.findOne(query);
+      res.json(result);
+    });
+
     //POST API
     app.post("/addPost", async (req, res) => {
       const post = req.body;
@@ -51,6 +58,7 @@ async function run() {
 
     app.put("/users", async (req, res) => {
       const user = req.body;
+      console.log("user", user);
       const filter = { email: user.email };
       const options = { upsert: true };
       const updateDoc = { $set: user };
